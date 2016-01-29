@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{{template "html_head"}}
+	</head>
+
+	<body>
+		{{template "header"}}
+
+		{{/* DEFAULT FROM ADDRESS */}}
+		{{ $fromCity := "Hawthorne" }}
+		{{ $fromState := "NJ"}}
+		{{ $fromZip := "07506" }}
+		{{ $fromCountry := "US" }}
+
+		<!-- LIST OF DEFAULT COUNTRY CODES -->
+		<!-- these must be 2-character codes per Easypost's api -->
+		<datalist id="country-codes">
+			<option value="US">
+			<option value="CA">
+			<option value="MX">
+		</datalist>
+
+		<!-- THE MAIN GUI OF THE APP -->
+		<div class="container">
+
+			<!-- ADDRESSES -->
+			<div class="row">
+
+				<!-- FROM ADDRESS -->
+				<!-- autofilled with our default address (our address) -->
+				<div class="col-xs-12 col-sm-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">From Address</h3>
+						</div>
+						<div class="panel-body">
+							<div class="form-horizontal">
+								<!-- TOGGLE DEFAULT ADDRESS -->
+								<div class="form-group">
+									<label class="control-label col-xs-4">Default:</label>
+									<div class="col-xs-8">
+										<div class="btn-group" data-toggle="buttons">
+											<label class="btn btn-default active" id="from-default-yes">
+												<input type="radio" autocomplete="off" checked> Yes
+											</label>
+											<label class="btn btn-default" id="from-default-no">
+												<input type="radio" autocomplete="off" checked> No
+											</label>
+										</div>
+									</div>
+								</div>
+
+								<fieldset id="from-fieldset" disabled>
+									<div class="form-group">
+										<label class="control-label col-xs-4">City:</label>
+										<div class="col-xs-8">
+											<input class="form-control" id="from-city" type="text" required value="{{$fromCity}}" data-default="{{$fromCity}}" autocomplete="off">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-xs-4">State:</label>
+										<div class="col-xs-8">
+											<input class="form-control" id="from-state" type="text" required value="{{$fromState}}" data-default="{{$fromState}}" autocomplete="off">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-xs-4">Zip:</label>
+										<div class="col-xs-8">
+											<input class="form-control" id="from-zip" type="text" required value="{{$fromZip}}" data-default="{{$fromZip}}" autocomplete="off">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-xs-4">Country:</label>
+										<div class="col-xs-8">
+											<input class="form-control" id="from-country" type="list" list="country-codes" required value="{{$fromCountry}}" data-default="{{$fromCountry}}" autocomplete="off">
+										</div>
+									</div>
+								</fieldset>
+							</div> <!-- end div.form-horizontal -->
+						</div> <!-- end div.panel-body -->
+					</div> <!-- end div.panel -->
+				</div> <!-- end div.col -->
+
+				<!-- TO ADDRESS -->
+				<div class="col-xs-12 col-sm-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">To Address</h3>
+						</div>
+						<div class="panel-body">
+							<div class="form-horizontal">
+								<!-- SHOW TRANSIT MAPS -->
+								<!-- these are just found on UPS's or FedEx's website and screenshot-saved -->
+								<!-- then the images are placed into the website's files and served as needed -->
+								<!-- add or remove more carriers as needed -->
+								<div class="form-group">
+									<label class="control-label col-xs-4">Transit Maps:</label>
+									<div class="col-xs-8">
+										<div class="btn-group">
+											<a class="btn btn-default" data-toggle="modal" data-target="#modal-transit-map-ups" href="#modal-transit-map-ups">UPS</a> 
+											<a class="btn btn-default" data-toggle="modal" data-target="#modal-transit-map-fedex" href="#modal-transit-map-fedex">FedEx</a> 
+										</div>
+									</div>
+								</div>
+
+								<fieldset id="to-fieldset">
+									<div class="form-group">
+										<label class="control-label col-xs-4">City:</label>
+										<div class="col-xs-8">
+											<input class="form-control" id="to-city" type="text" required autocomplete="off">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-xs-4">State:</label>
+										<div class="col-xs-8">
+											<input class="form-control" id="to-state" type="text" required autocomplete="off">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-xs-4">Zip:</label>
+										<div class="col-xs-8">
+											<input class="form-control" id="to-zip" type="text" required autocomplete="off">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-xs-4">Country:</label>
+										<div class="col-xs-8">
+											<input class="form-control" id="to-country" type="list" list="country-codes" required value="US" autocomplete="off">
+										</div>
+									</div>
+								</fieldset>
+							</div> <!-- end div.form-horizontal -->
+						</div> <!-- end div.panel-body -->
+					</div> <!-- end div.panel -->
+				</div> <!-- end div.col -->
+
+			</div> <!-- end div.row -->
+
+			<!-- SHIPMENT DETAILS -->
+			<!-- a shipment can include 1 or more packages/parcels -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Shipment Details</h3>
+						</div>
+						<div class="panel-body">
+
+							<!-- PACKAGE TEMPLATE -->
+							<!-- every package is cloned from this template div -->
+							<!-- upon page load, JS does this automatically to show the "first" row -->
+							<!-- and there must be at least 1 row, user cannot remove the last row -->
+							<div class="package-row hide" id="template" >
+								<center>
+									<div class="form-inline">
+										<div class="form-group package-default package-inputs">
+											<div class="input-group">
+												<span class="input-group-addon">Defaults:</span>
+												<select class="form-control package-default-options">
+													<option value="-1">Custom</option>
+												</select>
+											</div>
+										</div>
+										<div class="form-group package-size package-inputs">
+											<div class="input-group">
+												<span class="input-group-addon" >L:</span>
+												<input class="form-control package-length" type="text" placeholder="inches">
+											</div>
+										</div>
+										<div class="form-group package-size package-inputs">
+											<div class="input-group">
+												<span class="input-group-addon" >W:</span>
+												<input class="form-control package-width" type="text" placeholder="inches">
+											</div>
+										</div>
+										<div class="form-group package-size package-inputs">
+											<div class="input-group">
+												<span class="input-group-addon" >H:</span>
+												<input class="form-control package-height" type="text" placeholder="inches">
+											</div>
+										</div>
+										<div class="form-group package-size package-inputs">
+											<div class="input-group">
+												<span class="input-group-addon" >Lbs.</span>
+												<input class="form-control package-weight" type="text" placeholder="lbs.">
+											</div>
+										</div>
+										
+										<!-- HIDDEN INPUT FOR DOUBLE CHECKING EXTRA CHARGES -->
+										<input class="package-id" type="hidden" value="-1">
+										<input class="package-additional-charge" type="hidden" value="false">
+										
+										<!-- BUTTONS TO ADD OR REMOVE PACKAGES -->
+										<!-- since a single shipment can have many packages -->
+										<div class="form-group package-inputs">
+											<div class="btn-group package-add-remove-clone-btns">
+												<button class="btn btn-default package-add"><span class="glyphicon glyphicon-plus-sign"></span></button>
+												<button class="btn btn-default package-remove"><span class="glyphicon glyphicon-trash"></span></button>
+												<button class="btn btn-default package-clone"><span class="glyphicon glyphicon-repeat"></span></button>
+											</div>
+										</div>
+									</div>
+								</center>
+							</div>
+
+							<!-- THIS IS WHERE PACKAGES IN THE GUI ARE SHOWN -->
+							<!-- all packages a user adds/clones are in this div -->
+							<div id="list-of-packages"></div>
+
+						</div> <!-- end div.panel-body -->
+
+						<div class="panel-footer">
+							<center>
+								<button class="btn btn-primary" id="get-quotes" type="button">Calculate Cost</button>
+							</center>
+						</div>
+					</div> <!-- end div.panel -->
+				</div> <!-- end div.col -->
+			</div> <!-- end div.row -->
+
+			<!-- ERROR MESSAGES -->
+			<!-- nothing is displayed here unless a validation error occurs -->
+			<div class="row">
+				<div class="col-xs-12 col-sm-8 col-sm-offset-2">
+					<div id="error"></div>
+				</div>
+			</div>
+
+			<!-- LIST OF QUOTES -->
+			<!-- the data for this is retrieved when "get quotes" button is clicked -->
+			<!-- ajax call returns data that javascript populates in this table -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Freight Rates</h3>
+						</div>
+						<div class="panel-body">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>Carrier</th>
+										<th>Service</th>
+										<th>Rate</th>
+									</tr>
+								</thead>
+								<tbody id="cost-results">
+									<tr>
+										<td colspan="3">Nothing to calculate yet!</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div> <!-- end div.container -->
+
+		<!-- MODALS FOR TRANSIT MAPS -->
+		<!-- http://www.ups.com/maps -->
+		<div class="modal fade" id="modal-transit-map-ups">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">UPS Transit Map</h4>
+					</div>
+					<div class="modal-body">
+						<img class="img-responsive img-full-width" src="/static/img/ups_transit_map.gif">
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="button" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- http://www.fedex.com/grd/maps/ShowMapEntry.do?CMP=PAC-fxg_g2m_082 -->
+		<div class="modal fade" id="modal-transit-map-fedex">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">FedEx Transit Map</h4>
+					</div>
+					<div class="modal-body">
+						<img class="img-responsive img-full-width" src="/static/img/fedex_transit_map.PNG">
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" type="button" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{{template "footer"}}
+		{{template "html_scripts"}}
+	</body>
+</html>
