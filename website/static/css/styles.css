@@ -1,0 +1,218 @@
+/*BUTTONS*/
+/*GET RID OF BUTTON ANIMATIONS WHEN CLICKED*/
+.btn-primary:active,
+.btn-default:active {
+	background-image: 		none;
+	box-shadow: 			0px 2px 2px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 	0px 2px 2px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 		0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+/*REMOVE BTN SHADOWS*/
+/*makes awkward overlaps in input groups*/
+/*looks a bit cleaner*/
+.btn {
+	box-shadow: 		none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: 	none;
+}
+
+/*DEFAULT BTN AND PANELS*/
+/*btns need borders since we removed the shadows*/
+/*panels need borders to match buttons*/
+/*input group addons needs the same border to match buttons and inputs*/
+/*input borders match buttons*/
+.btn-default, 
+.panel-default, 
+span.input-group-addon,
+select.form-control,
+input.form-control,
+input[type=text].form-control,
+.form-control[disabled] {
+	border: 				1px solid #DDD;
+}
+
+/*REMOVE EXTRA BORDER ON BTN GROUPS*/
+/*second+ button have extra border b/c of above css*/
+.btn-group .btn.btn-default:not(:first-child) {
+	border-left: 			0;
+}
+
+/*ADD 1PX BORDER TO MAKE ALL BUTTONS THE SAME HEIGHT
+/*only btn-default usually has borders, other btn- are just colored*/
+.btn-primary {
+	border-bottom: 			1px solid #2196F3;
+}
+
+/*INPUT GROUPS*/
+/*give addons a background to stand out*/
+span.input-group-addon {
+	background-color:  		#EEE;
+}
+
+/*MAKE FORM CONTROLS HAVE FULL BORDERS*/
+/*makes them stand out better and easier to use*/
+/*removes the Material Design underline only on inputs*/
+select.form-control,
+input.form-control,
+input[type=text].form-control {
+	border-radius:  		3px; 				/*same as btns*/
+	padding-left: 			5px;
+	border-bottom-width: 	1px;
+	box-shadow:  			none !important;
+}
+select.form-control:focus,
+input.form-control:focus,
+input[type=text].form-control:focus {
+	border-color: 			#66afe9;
+	box-shadow:  			none !important;
+	-webkit-box-shadow:		none !important;
+	-moz-box-shadown: 		none !important;
+}
+
+
+/*FIX INPUT SPINNER BUTTONS*/
+input.form-control {
+	padding-right: 			0;
+}
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+	height: 				auto;
+}
+
+/*MADE DEFAULT FONT COLOR A BIT DARKER*/
+body {
+	color: 				#333;
+	margin-bottom: 		100px;	/*sticky footer: footer height + footer margin-top*/
+}
+
+/*HEADER AND FOOTER*/
+header,
+footer {
+	background-color: 	#F5F5F5; 
+	border-color: 		#2196F3;
+	border-style: 		solid;
+	border-width: 		0;
+}
+
+header {
+	border-bottom-width: 	1px;
+	margin-bottom: 			20px;
+}
+
+/*make header smaller on really small screens*/
+@media(max-width: 445px) {
+	#header-title {
+		font-size:  	20px;
+	}
+}
+
+/*LINK IN FOOTER STYLES*/
+footer a,
+footer a:hover{
+	color: 				#000;
+}
+
+/*STICKY FOOTER*/
+footer.sticky {
+	border-top-width: 	1px;
+	position: 			absolute;
+	bottom: 			0;
+	width: 				100%;
+	height: 			80px;
+	margin-top: 		20px;
+	padding-top: 		10px;
+}
+html {
+	position: 			relative;
+	min-height: 		100%;
+}
+
+/*PANELS*/
+/*MAKE PANEL-TITLE LARGER*/
+.panel-title {
+	font-size: 			20px;
+}
+
+/*PACKAGE OPTIONS*/
+/*keep all inputs sized smaller so they are on one row normally*/
+.package-size {
+	width: 				120px;
+}
+
+/*keep dropdown for default options a bit wider when nothing is present in list*/
+/*but set a max width so that row for package doesn't flow over into two rows*/
+.package-default {
+	min-width: 			250px;
+	max-width: 			272px;
+}
+.package-default .input-group {
+	width: 				100%;
+}
+.package-default .input-group .input-group-addon {
+	padding-left:  		16px;
+	padding-right:  	16px;
+}
+
+/*show package option inputs on seperate rows on small screens*/
+@media (max-width: 995px) {
+	.package-inputs.form-group {
+		display: 			block;
+		margin-bottom: 		10px;
+		text-align: 		left;
+		width: 				100%;
+	}
+
+	.package-inputs .input-group {
+		width: 				100%;
+	}
+	.package-inputs .input-group .input-group-addon {
+		width: 				20%;
+		text-align:  		left;
+	}
+	.package-inputs .input-group .form-control {
+		width: 				100%;
+	}
+
+	/*add, remove, clone buttons need to be centered instead of left aligned*/
+	.package-inputs:last-child {
+		text-align:  		center;
+	}
+
+	/*no max width on small screens*/
+	.package-default {
+		max-width:  		none;
+	}
+
+	/*default addon has to be fixed since we modified its size on larger screens*/
+	.package-default .input-group .input-group-addon {
+		padding-left:  		16px;
+		padding-right:  	16px;
+	}
+}
+
+/*MODALS*/
+.modal .modal-header,
+.modal .modal-footer {
+	padding-top: 		10px;
+	padding-bottom:  	10px;
+}
+
+.modal .modal-header {
+	border-bottom: 		1px solid #DDD;
+}
+.modal .modal-header .modal-title {
+	font-size: 			28px;
+	text-align:  		center;
+	font-weight:  		300;
+}
+/*make footer stand out a bit more*/
+/*similar styling to panel footers*/
+.modal .modal-footer {
+	border-top: 		1px solid #DDD;
+}
+
+/*SPACING BETWEEN ROWS OF PACKAGES*/
+#list-of-packages .package-row:not(:last-child) {
+	margin-bottom: 10px;
+}
