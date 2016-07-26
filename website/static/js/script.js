@@ -1,5 +1,9 @@
 "use strict";
 
+//Global variable to hold the AJAX request that get the quotes
+//need this to be able to cancel the request if needed
+var getQuotes;
+
 //**************************************************************************************************************
 //CONSTANTS
 
@@ -356,7 +360,7 @@ $('body').on('click', '#get-quotes', function() {
 
 	//everything validated
 	//perform ajax call
-	$.ajax({
+	getQuotes = $.ajax({
 		type: 	"GET",
 		url: 	"/quote/",
 		data: 	{
@@ -514,20 +518,31 @@ $('body').on('click', '#get-quotes', function() {
 				table.append(row);
 			}
 
+			//reset var that tracks ajax request
+			getQuotes = null;
+
 			return;
 		}
 	});
 	return;
 });
 
+//Cancel the AJAX request to get quotes
+//for example, you meant to choose 3 packages but put in 4 by mistake
+//so you don't have to wait for the whole ajax call to finish which could take a few seconds
+$('#get-quotes-cancel').click(function() {
+	if (getQuotes !== null) {
+		//cancel ajax call
+		getQuotes.abort();
 
+		//reset gui
+		$('#get-quotes').attr('disabled', false).text('Calculate Cost');
+		$('#error').html('');
+		$('#cost-results').html('<tr><td colspan="6">You cancelled the request...</td></tr>');
+	}
 
-
-
-
-
-
-
+	return;
+});
 
 //**************************************************************************************************************
 //ON PAGE LOAD

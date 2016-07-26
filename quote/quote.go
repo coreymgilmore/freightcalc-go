@@ -144,6 +144,7 @@ func Get(w http.ResponseWriter, r *http.Request) {
 
 	//SEND BACK RESULTS TO AJAX CALL
 	//this should be a json object
+	w.WriteHeader(http.StatusOK)
 	w.Write(body)
 	return
 }
