@@ -5,16 +5,17 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
-//DIRECTORY STORING TEMPLATES
-//path needs to be absolute so program works from anywhere in OS when "go install"-ed
-const templateDir = "/home/manager/go/src/github.com/coreymgilmore/freightcalc-go/website/html_templates/"
+//pathToTemplates is the directory where the template files are stored
+//this is defined now so all funcs have access to it but a value is set to it during init()
+var pathToTemplates = ""
 
-//VAR FOR STORING BUILT TEMPLATES
+//htmlTemplates stores the built and cached templates
 var htmlTemplates *template.Template
 
-//STRUCT FOR HOLDING NOTIFICATION TEMPLATE DATA
+//NotificationPage holds the data format for when building a notification page
 type NotificationPage struct {
 	PanelColor string
 	Title      string
@@ -24,43 +25,54 @@ type NotificationPage struct {
 	BtnText    string
 }
 
-//**********************************************************************
-//FUNCS
+//Get the path to the templates and get the templates ready for use
+//need to determine GOPATH since this needs to be defined on all go systems
+//html files aren't part of the "installed" package, they are separate files
+func init() {
+	//get path to files
+	gopath := os.Getenv("GOPATH")
+	pathToTemplates = gopath + "/src/github.com/coreymgilmore/freightcalc-go/website/html_templates/"
 
-//GET LIST OF FILES FROM DIRECTORY TO BUILD INTO TEMPLATES
-//scans for files in the template directory
-//saves each file as a full path to a map (map of strings where each string is a file path)
-//then builds the templates with these files
-//do this instead of having to list every file in ParseFiles() manually
-func Build() {
+	//build templates
+	//this will panic on errors
+	build()
+	return
+}
+
+//build gets the list of files from the pathToTemplates and builds the files in that directory into golang templates
+//the templates are cached for use in the future by the app
+func build() {
 	//placeholder
-	paths := make([]string, 0, 8)
+	//this is the list of paths for each file in the pathToTemplates
+	//need the path to each to be able to parse the files
+	var paths []string
 
-	//get list of files
-	files, err := ioutil.ReadDir(templateDir)
+	//get list of files in the pathToTemplates directory
+	files, err := ioutil.ReadDir(pathToTemplates)
 	if err != nil {
 		log.Panic(err)
 		return
 	}
 
-	//get full file paths as strings
+	//get full file paths
+	//we need the full paths to be able to build the templates, not relative paths
+	//ignore any directories
+	//this gets a list of paths (as strings) in an array
 	for _, f := range files {
 		if f.IsDir() {
 			continue
 		}
 
-		path := templateDir + f.Name()
+		path := pathToTemplates + f.Name()
 		paths = append(paths, path)
 	}
 
 	//parse files into templates
-	htmlTemplates = template.Must(template.ParseFiles(
-		paths...,
-	))
+	htmlTemplates = template.Must(template.ParseFiles(paths...))
 	return
 }
 
-//DISPLAY A TEMPLATE TO THE CLIENT
+//Load displays a template
 //data is a struct used to fill in data into the template
 //used for actually showing the template to a user
 func Load(w http.ResponseWriter, templateName string, data interface{}) {
