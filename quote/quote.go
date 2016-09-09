@@ -26,6 +26,7 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	toState := strings.ToUpper(r.FormValue("toState"))
 	toZip := r.FormValue("toZip")
 	toCountry := strings.ToUpper(r.FormValue("toCountry"))
+	toResidential, _ := strconv.ParseBool(r.FormValue("toResidential"))
 	lengths := r.FormValue("lengths")
 	widths := r.FormValue("widths")
 	heights := r.FormValue("heights")
@@ -84,7 +85,11 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	v.Set("order[to_address][zip]", toZip)
 	v.Set("order[to_address][country]", toCountry)
 	v.Set("order[to_address][phone]", "123-456-7890")
-	v.Set("order[to_address][residential]", "false")
+
+	//formatting a bool instead of taking the value form r.FormValue b/c the value passed in the form could be anything, not just a bool value
+	//strconv.ParseBool converts to a bool...anything not true is false.  so this deals with values of random strings, ints, etc.
+	//using formatBool gets the actual value we are interpreting as a bool...not a mistaken int or random string
+	v.Set("order[to_address][residential]", strconv.FormatBool(toResidential))
 
 	//loop through each package
 	//because we need to index the values in the call to easypost

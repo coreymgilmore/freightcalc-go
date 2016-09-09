@@ -76,6 +76,13 @@
 											<input class="form-control" id="from-country" type="list" list="country-codes" required value="{{$fromCountry}}" data-default="{{$fromCountry}}" autocomplete="off">
 										</div>
 									</div>
+									<!-- extra form-group to keep form and to panel the same height since to panel has the extra "residential" buttons -->
+									<div class="form-group" style="visibility:hidden">
+										<label class="control-label col-xs-4">.</label> <!-- need some kind of content to achieve line height -->
+										<div class="col-xs-8">
+											<input class="btn btn-default">
+										</div>
+									</div>
 								</fieldset>
 							</div> <!-- end div.form-horizontal -->
 						</div> <!-- end div.panel-body -->
@@ -127,6 +134,19 @@
 										<label class="control-label col-xs-4">Country:</label>
 										<div class="col-xs-8">
 											<input class="form-control" id="to-country" type="list" list="country-codes" required value="US" autocomplete="off">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-xs-4">Residential:</label>
+										<div class="col-xs-8">
+											<div class="btn-group" id="to-residential" data-toggle="buttons">
+												<label class="btn btn-default active">
+													<input id="no" type="radio" autocomplete="off" data-value="false" checked>No
+												</label>
+												<label class="btn btn-default">
+													<input id="yes" type="radio" autocomplete="off" data-value="true" >Yes
+												</label>
+											</div>
 										</div>
 									</div>
 								</fieldset>

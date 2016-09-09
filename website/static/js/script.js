@@ -256,6 +256,20 @@ function isValidDimensions (inputArray) {
 	return true;
 }
 
+//GET TOGGLE STATUS
+//toggle is a 2 button radio button
+//used to get the no/yes status of the residential button for the "to" address 
+//returns "false" if the address is not residential
+//returns "true" if the address is residential
+function getToggleStatus(elem) {
+	if (elem.find('#no').parent('label').hasClass('active')) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
 //GET FREIGHT RATES
 //get inputs for addresses
 //get packages
@@ -275,6 +289,7 @@ $('body').on('click', '#get-quotes', function() {
 	var toState = 		$('#to-state').val().trim();
 	var toZip = 		$('#to-zip').val().trim();
 	var toCountry = 	$('#to-country').val().trim();
+	var toResidential = getToggleStatus($('#to-residential'));
 
 	//shipment details
 	var lengths = 		getPackageDetail('.package-length');
@@ -372,6 +387,7 @@ $('body').on('click', '#get-quotes', function() {
 			toState: 		toState,
 			toZip: 			toZip,
 			toCountry: 		toCountry,
+			toResidential:  toResidential,
 			lengths: 		lengths.toString(),
 			widths: 		widths.toString(),
 			heights: 		heights.toString(),
