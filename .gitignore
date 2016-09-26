@@ -1,5 +1,5 @@
 /quote/quote-apikey.go
-/website/static/img/
+/website/static/img/*
 /website/static/js/default-packages.js
 /website/static/js/script.min.js
 /website/static/css/styles.min.css
